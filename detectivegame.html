@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Word Detective 🕵️</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;padding:18px;
+  display:flex;justify-content:center;align-items:center;
+  font-family:Arial,sans-serif;color:#fff8e9;
+  background:radial-gradient(circle at top,#294767,#101827 65%,#080d16);
+}
+.game{
+  width:100%;max-width:720px;padding:28px;
+  background:#142238;border:1px solid #405573;
+  border-radius:24px;box-shadow:0 20px 60px #0008;
+}
+.brand{color:#f5c86b;letter-spacing:3px;font-size:12px;font-weight:bold}
+h1{font-size:clamp(35px,8vw,60px);margin:20px 0;line-height:1}
+h1 span{display:block;color:#f5c86b}
+p{color:#c1cede;line-height:1.6}
+h2{margin-top:12px}
+button{
+  border:0;border-radius:10px;padding:13px 17px;
+  font-size:15px;font-weight:bold;cursor:pointer;
+  transition:.2s;margin:5px 3px;
+}
+button:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.primary{background:#58d6a0;color:#082619}
+.gold{background:#f5c86b;color:#30220b}
+.secondary{background:#263d59;color:white;border:1px solid #47617f}
+.hidden{display:none!important}
+.hero{display:flex;gap:14px;align-items:center;margin:25px 0}
+.magnifier{
+  width:100px;height:100px;flex-shrink:0;border-radius:20px;
+  display:grid;place-items:center;font-size:50px;
+  background:linear-gradient(135deg,#ffe5a6,#b47a3b);
+}
+.board{flex:1;background:#0c1727;padding:17px;border-radius:14px;border:1px solid #344b67}
+.tiles{display:flex;gap:7px;margin-top:12px}
+.tile{flex:1;text-align:center;background:#f2dfb7;color:#263346;
+  border-radius:6px;padding:10px 3px;font-size:20px;font-weight:bold}
+.levels{display:grid;gap:12px;margin-top:20px}
+.level{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  background:#1a2d45;color:white;border:1px solid #405773;
+  padding:17px;border-radius:14px
+}
+.level .emoji{font-size:30px}
+.level small{display:block;color:#c1cede;margin-top:5px;line-height:1.4}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+.stat{background:#0b1728;padding:10px 13px;border-radius:9px;color:#c1cede}
+.stat b{color:white}
+.paper{
+  background:linear-gradient(135deg,#fff3d6,#e8d0a1);
+  color:#263346;border-radius:14px;padding:24px;margin:20px 0;
+  box-shadow:0 8px 0 #09111d
+}
+.paper p{color:#4c4b43}
+.prompt{font-size:20px;font-weight:bold;line-height:1.5;text-align:center}
+input{
+  width:100%;padding:15px;border-radius:10px;
+  border:2px solid #c6ae80;font-size:17px;margin-top:12px;
+  background:#fffaf0;color:#1a2635
+}
+.submit{width:100%;margin:10px 0 0}
+.feedback{
+  background:#0b1727;border:1px solid #354a63;
+  padding:14px;border-radius:10px;line-height:1.5;
+  min-height:48px;color:#c1cede
+}
+.good{color:#8af0bf!important;border-color:#318866!important}
+.bad{color:#ff9cab!important;border-color:#a7435b!important}
+.hint{color:#ffe09b!important;border-color:#a77c35!important}
+.evidence{padding:13px;margin:10px 0;background:#0c192b;
+  border:1px solid #354b65;border-radius:10px;line-height:1.5}
+.suspects{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.suspect{padding:13px 8px;background:#0c192b;border:1px solid #405773;
+  border-radius:12px;text-align:center}
+.portrait{font-size:42px;margin:8px}
+.suspect p{font-size:12px;min-height:55px}
+.suspect button{width:100%;margin:4px 0;padding:10px 4px}
+.center{text-align:center}
+.big{font-size:70px}
+.footer{text-align:center;color:#8295ad;font-size:12px;margin-top:20px}
+@media(max-width:500px){
+ body{padding:10px;align-items:flex-start}
+ .game{padding:18px}
+ .magnifier{width:75px;height:75px;font-size:38px}
+ .suspects{grid-template-columns:1fr}
+ .suspect{display:grid;grid-template-columns:60px 1fr;text-align:left;gap:8px}
+ .portrait{grid-row:span 2}
+ .suspect p{min-height:0}
+ .suspect button{grid-column:2}
+}
+</style>
+</head>
+
+<body>
+<main class="game">
+  <div class="brand">◈ THE DETECTIVE CLUB</div>
+
+  <section id="home">
+    <h1>THE WORD <span>DETECTIVE</span></h1>
+    <p>A priceless diamond has disappeared from the museum! Solve word puzzles, uncover clues, and catch the thief.</p>
+
+    <div class="hero">
+      <div class="magnifier">🔎</div>
+      <div class="board">
+        <b style="color:#f5c86b">EVIDENCE BOARD</b>
+        <div class="tiles">
+          <div class="tile">?</div><div class="tile">🔑</div>
+          <div class="tile">✦</div><div class="tile">?</div>
+        </div>
+        <p>Every correct answer brings you closer to the truth.</p>
+      </div>
+    </div>
+
+    <button class="primary" onclick="screen('levels')">▶ Start investigating</button>
+    <button class="secondary" onclick="screen('how')">How to play</button>
+  </section>
+
+  <section id="how" class="hidden">
+    <h2>🕵️ Detective Handbook</h2>
+    <p>1. Solve the word puzzles and riddles.</p>
+    <p>2. Use hints if you get stuck. Each hint costs 5 points.</p>
+    <p>3. Collect evidence after each correct answer.</p>
+    <p>4. Complete all three levels and identify the thief.</p>
+    <button class="primary" onclick="screen('levels')">Let's play!</button>
+    <button class="secondary" onclick="screen('home')">Back</button>
+  </section>
+
+  <section id="levels" class="hidden">
+    <h2>Choose Your Difficulty</h2>
+    <p>Complete the levels in order. Each level gets more challenging!</p>
+
+    <div class="levels">
+      <button class="level" onclick="start(0)">
+        <span class="emoji">🕵️</span>
+        <span><b>EASY ★☆☆</b><small>Simple word puzzles and riddles</small></span>
+      </button>
+      <button class="level" onclick="start(1)">
+        <span class="emoji">🗝️</span>
+        <span><b>MEDIUM ★★☆</b><small>Trickier riddles and word clues</small></span>
+      </button>
+      <button class="level" onclick="start(2)">
+        <span class="emoji">🧠</span>
+        <span><b>HARD ★★★</b><small>Ciphers and detective logic</small></span>
+      </button>
+    </div>
+    <button class="secondary" onclick="screen('home')">← Main menu</button>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="brand" id="levelTitle"></div>
+    <h2 id="puzzleTitle"></h2>
+
+    <div class="stats">
+      <div class="stat">Puzzle <b id="progress">1/3</b></div>
+      <div class="stat">Score <b id="score">0</b></div>
+      <div class="stat">Clues <b id="clueCount">0</b></div>
+    </div>
+
+    <div class="paper">
+      <div class="brand" id="puzzleType" style="color:#75552b;text-align:center"></div>
+      <div class="prompt" id="prompt"></div>
+      <div class="tiles" id="letters"></div>
+
+      <form id="answerForm">
+        <input id="answer" placeholder="Type your answer..." autocomplete="off" required>
+        <button class="primary submit" type="submit">Submit answer ↗</button>
+      </form>
+    </div>
+
+    <div id="feedback" class="feedback">Think carefully, detective!</div>
+
+    <button class="gold" id="hintButton" onclick="hint()">💡 Get a hint −5 points</button>
+    <button class="secondary" onclick="screen('levels')">← Levels</button>
+    <div id="nextArea" class="hidden">
+      <button class="primary" onclick="next()">Continue →</button>
+    </div>
+  </section>
+
+  <section id="evidenceScreen" class="hidden">
+    <h2>🗂️ Evidence Unlocked!</h2>
+    <p>Great work, detective. Here's what you've discovered.</p>
+    <div id="evidenceList"></div>
+    <button class="primary" onclick="continueAfterEvidence()">Continue investigation →</button>
+  </section>
+
+  <section id="suspectsScreen" class="hidden">
+    <h2>🔍 Who Stole the Diamond?</h2>
+    <p>Study all the evidence and make your accusation.</p>
+    <div id="allEvidence"></div>
+
+    <div class="suspects">
+      <div class="suspect">
+        <div class="portrait">👨🏻‍💼</div><b>Daniel</b>
+        <p>The museum curator. Knows the building.</p>
+        <button class="secondary" onclick="accuse('Daniel')">Accuse</button>
+      </div>
+      <div class="suspect">
+        <div class="portrait">👨🏽‍✈️</div><b>Leo</b>
+        <p>The security guard. Has access to the corridors.</p>
+        <button class="secondary" onclick="accuse('Leo')">Accuse</button>
+      </div>
+      <div class="suspect">
+        <div class="portrait">👩🏻‍🔧</div><b>Sophia</b>
+        <p>The cleaner. Saw footprints near the exit.</p>
+        <button class="secondary" onclick="accuse('Sophia')">Accuse</button>
+      </div>
+    </div>
+
+    <div id="accuseFeedback" class="feedback">Follow the evidence, not just your instincts!</div>
+    <button class="secondary" onclick="screen('levels')">Review levels</button>
+  </section>
+
+  <section id="ending" class="hidden center">
+    <div class="big" id="endIcon">🏆</div>
+    <h2 id="endTitle">Case Closed!</h2>
+    <p id="endText"></p>
+    <div class="stats" style="justify-content:center">
+      <div class="stat">Final score <b id="finalScore"></b></div>
+      <div class="stat">Evidence <b id="finalClues"></b></div>
+    </div>
+    <button class="primary" onclick="resetGame()">↻ Play again</button>
+    <button class="secondary" onclick="screen('home')">Main menu</button>
+  </section>
+
+  <div class="footer">A sharp mind always finds the truth. 🔎</div>
+</main>
+
+<script>
+const levels = [
+ {
+  name:"EASY", subtitle:"The Rookie Detective",
+  puzzles:[
+   {
+    type:"ANAGRAM · 1/3",title:"The Missing Safe",
+    prompt:"Unscramble these letters to discover where valuables are kept.",
+    letters:"F A E S",answers:["safe"],
+    hint:"It has a strong door and keeps money secure.",
+    evidence:"The safe was found open, but its lock was not damaged."
+   },
+   {
+    type:"RIDDLE · 2/3",title:"The Silent Timekeeper",
+    prompt:"I have hands but cannot clap. What am I?",
+    answers:["clock","a clock"],
+    hint:"You might find me hanging on a wall.",
+    evidence:"The museum clock stopped at 9:15 PM."
+   },
+   {
+    type:"WORD CLUE · 3/3",title:"The Locked Door",
+    prompt:"Complete the word: L O _ K. It keeps a door securely closed.",
+    answers:["lock"],
+    hint:"You can open it with a key.",
+    evidence:"The service door was unlocked shortly before closing."
+   }
+  ]
+ },
+ {
+  name:"MEDIUM",subtitle:"The Hidden Suspect",
+  puzzles:[
+   {
+    type:"RIDDLE · 1/3",title:"Footsteps in the Mud",
+    prompt:"The more you take, the more you leave behind. What are they?",
+    answers:["footsteps","footstep"],
+    hint:"Think about what your shoes leave as you walk.",
+    evidence:"Muddy footprints led toward the staff exit."
+   },
+   {
+    type:"ANAGRAM · 2/3",title:"The Secret Message",
+    prompt:"Unscramble the letters to discover what can hide a message.",
+    letters:"D O C E",answers:["code"],
+    hint:"Secret agents sometimes use this to hide information.",
+    evidence:"A coded note was found near the service corridor."
+   },
+   {
+    type:"RIDDLE · 3/3",title:"The Strange Sound",
+    prompt:"I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+    answers:["echo","an echo"],
+    hint:"You might hear me bounce back in a tunnel.",
+    evidence:"A witness heard a strange echo from the service corridor."
+   }
+  ]
+ },
+ {
+  name:"HARD",subtitle:"The Master Thief",
+  puzzles:[
+   {
+    type:"LETTER CIPHER · 1/3",title:"Decode the Secret Note",
+    prompt:"Every letter was shifted FORWARD by one. Move each letter BACK by one to decode: UIFGU",
+    answers:["theft"],
+    hint:"U becomes T. I becomes H. Apply that rule to every letter.",
+    evidence:"The decoded note mentions a theft near the staff corridor."
+   },
+   {
+    type:"WORD LOGIC · 2/3",title:"The Waiting Line",
+    prompt:"I am a five-letter word. My name describes a line of people waiting. What am I?",
+    answers:["queue","a queue"],
+    hint:"The word begins with Q.",
+    evidence:"Staff members were waiting in a queue near the exit."
+   },
+   {
+    type:"NUMBER CIPHER · 3/3",title:"The Final Code",
+    prompt:"Using A=1, B=2, C=3 and so on, decode: 3 - 1 - 2.",
+    answers:["cab"],
+    hint:"Convert each number into its matching alphabet letter.",
+    evidence:"A coded message refers to a cab waiting outside at 9:20 PM."
+   }
+  ]
+ }
+];
+
+let level=0,index=0,score=0,hintsUsed=0,evidence=[],solved=false;
+const culprit="Leo";
+
+function screen(id){
+ document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+}
+function start(n){
+ level=n;index=0;hintsUsed=0;
+ loadPuzzle();screen("game");
+}
+function puzzle(){return levels[level].puzzles[index]}
+
+function loadPuzzle(){
+ solved=false;
+ const p=puzzle(),l=levels[level];
+ document.getElementById("levelTitle").textContent="LEVEL "+(level+1)+" · "+l.subtitle;
+ document.getElementById("puzzleTitle").textContent=p.title;
+ document.getElementById("progress").textContent=(index+1)+"/3";
+ document.getElementById("score").textContent=score;
+ document.getElementById("clueCount").textContent=evidence.length;
+ document.getElementById("puzzleType").textContent=p.type;
+ document.getElementById("prompt").textContent=p.prompt;
+
+ const tiles=document.getElementById("letters");
+ tiles.innerHTML="";
+ (p.letters||"").split(" ").filter(Boolean).forEach(letter=>{
+   const div=document.createElement("div");
+   div.className="tile";div.textContent=letter;tiles.appendChild(div);
+ });
+
+ const input=document.getElementById("answer");
+ input.value="";input.disabled=false;
+ document.querySelector("#answerForm button").disabled=false;
+ document.getElementById("feedback").className="feedback";
+ document.getElementById("feedback").textContent="Think carefully, detective!";
+ document.getElementById("hintButton").disabled=false;
+ document.getElementById("hintButton").textContent="💡 Get a hint −5 points";
+ document.getElementById("nextArea").classList.add("hidden");
+}
+
+document.getElementById("answerForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if(solved)return;
+ const answer=document.getElementById("answer").value.trim().toLowerCase().replace(/\s+/g," ");
+ const p=puzzle(),fb=document.getElementById("feedback");
+
+ if(p.answers.includes(answer)){
+  solved=true;
+  score+=Math.max(5,15-hintsUsed*5);
+  evidence.push({level:levels[level].name,title:p.title,text:p.evidence});
+  fb.className="feedback good";
+  fb.textContent="✓ Correct! Evidence found: "+p.evidence;
+  document.getElementById("answer").disabled=true;
+  document.querySelector("#answerForm button").disabled=true;
+  document.getElementById("hintButton").disabled=true;
+  document.getElementById("score").textContent=score;
+  document.getElementById("clueCount").textContent=evidence.length;
+  document.getElementById("nextArea").classList.remove("hidden");
+ }else{
+  fb.className="feedback bad";
+  fb.textContent="Not quite! Read the clue carefully and try again.";
+ }
+});
+
+function hint(){
+ if(solved)return;
+ hintsUsed++;
+ score=Math.max(0,score-5);
+ document.getElementById("score").textContent=score;
+ const fb=document.getElementById("feedback");
+ fb.className="feedback hint";
+ fb.textContent="💡 Hint: "+puzzle().hint;
+ document.getElementById("hintButton").disabled=true;
+ document.getElementById("hintButton").textContent="Hint used";
+}
+
+function next(){
+ if(index<2){index++;loadPuzzle();return}
+ const list=document.getElementById("evidenceList");
+ list.innerHTML="";
+ evidence.slice(-3).forEach(item=>{
+  const div=document.createElement("div");div.className="evidence";
+  div.textContent="🔎 "+item.title+": "+item.text;
+  list.appendChild(div);
+ });
+ screen("evidenceScreen");
+}
+
+function continueAfterEvidence(){
+ if(level<2){
+  level++;index=0;hintsUsed=0;loadPuzzle();screen("game");
+ }else{
+  const list=document.getElementById("allEvidence");
+  list.innerHTML="";
+  evidence.forEach(item=>{
+   const div=document.createElement("div");div.className="evidence";
+   div.textContent=item.level+" · "+item.title+": "+item.text;
+   list.appendChild(div);
+  });
+  screen("suspectsScreen");
+ }
+}
+
+function accuse(name){
+ const fb=document.getElementById("accuseFeedback");
+ if(name===culprit){
+  document.getElementById("endIcon").textContent="🏆";
+  document.getElementById("endTitle").textContent="You Caught the Thief!";
+  document.getElementById("endText").textContent=
+   "Leo had access to the security corridor. You followed the clues and recovered the Moonlight Diamond. Excellent detective work!";
+  document.getElementById("finalScore").textContent=score;
+  document.getElementById("finalClues").textContent=evidence.length;
+  screen("ending");
+ }else{
+  fb.className="feedback bad";
+  fb.textContent="You accused "+name+", but some evidence does not fit. Reconsider the staff corridor, the timing, and the cab.";
+ }
+}
+
+function resetGame(){
+ level=0;index=0;score=0;hintsUsed=0;evidence=[];solved=false;
+ loadPuzzle();screen("home");
+}
+</script>
+</body>
+</html>
